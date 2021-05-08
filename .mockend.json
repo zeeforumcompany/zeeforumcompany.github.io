@@ -1,3 +1,4 @@
+//URL TO Visit: https://mockend.com/zeeforumcompany/zeeforumcompany.github.io/comments
 {
   "Post": {
     "title": "string",
@@ -9,5 +10,11 @@
   "Comment": {
     "body": "string",
     "post": "Post"
+  },
+  "Photos": {
+    "title": "string",
+    "views": "int",
+    "draft": "boolean",
+    "image": "url"
   }
 }
