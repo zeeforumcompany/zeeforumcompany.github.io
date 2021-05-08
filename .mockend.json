@@ -10,7 +10,7 @@
     "body": "string",
     "post": "Post"
   },
-  "Photos": {
+  "Photo": {
     "title": "string",
     "views": "int",
     "draft": "boolean",
