@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Build JSON Tags</title>
+
+	<style>
+		.wrapper {
+			width: 50%;
+			margin: 0 auto;
+		}
+
+		.form-fields {
+			margin: 10px;
+		}
+
+		.form-button {
+			margin: 0px 10px;
+		}
+
+		.form-button button {
+			background-color: #159b6e;
+			border: 1px solid #159b6e;
+			border-radius: 4px;
+			padding: 4px 10px;
+			font-weight: bold;
+			font-size: 16px;
+			color: #FFF;
+			cursor: pointer;
+		}
+
+		.form-button button:hover {
+			background-color: #1eae7e;
+			border: 1px solid #1eae7e;
+		}
+
+		#copy {
+			background-color: #367aae;
+			border: 1px solid #367aae;
+		}
+
+		#copy:hover {
+			background-color: #4c8bbc;
+			border: 1px solid #4c8bbc;
+		}
+
+		textarea {
+			width: 100%;
+			padding: 10px;
+			border-radius: 4px;
+			font-size: 14px;
+		}
+
+		label {
+			font-weight: bold;
+			font-family:Arial, Helvetica, sans-serif;
+			font-size: 18px;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="form form-fields">
+			<label>Tags</label>
+			<textarea name="text" id="text" cols="30" rows="30"></textarea>
+		</div>
+
+		<div class="form form-button">
+			<button type="button" id="build">Build JSON</button>
+			<button type="button" id="copy">Copy JSON</button>
+		</div>
+
+		<div class="form form-fields">
+			<label>JSON</label>
+			<textarea name="json" id="json" cols="30" rows="10"></textarea>
+		</div>
+	</div>
+
+	<script>
+		document.getElementById('build').addEventListener('click', function() {
+			// Get text area value
+			var text = document.getElementById('text').value;
+
+			// Split text area value by new line
+			var textArray = text.split('\n');
+
+			// Create empty array
+			var json = [];
+
+			// Loop through text array
+			for (var i = 0; i < textArray.length; i++) {
+				// Split text array by colon
+				// var textArray2 = textArray[i].split(':');
+
+				// Create empty object
+				var obj = {};
+				obj.tagName = textArray[i];
+
+				// Loop through text array 2
+				// for (var j = 0; j < textArray2.length; j++) {
+				// 	// Check if index is 0
+				// 	if (j == 0) {
+				// 		// Set key
+				// 		obj.tagName = textArray2[j];
+				// 	} else {
+				// 		// Set value
+				// 		obj.value = textArray2[j];
+				// 	}
+				// }
+
+				// Push object to json array
+				json.push(obj);
+			}
+
+			// Convert json array to json string
+			var jsonString = JSON.stringify(json);
+
+			// Set json string to json text area
+			document.getElementById('json').value = jsonString;
+		});
+
+		// Copy json text area value to clipboard
+		document.getElementById('copy').addEventListener('click', function() {
+			// Get json text area value
+			var json = document.getElementById('json').value;
+
+			// Create text area
+			var textArea = document.createElement('textarea');
+
+			// Set text area value
+			textArea.value = json;
+
+			// Append text area to body
+			document.body.appendChild(textArea);
+
+			// Select text area
+			textArea.select();
+
+			// Copy text area value to clipboard
+			document.execCommand('copy');
+
+			// Remove text area
+			document.body.removeChild(textArea);
+		});
+	</script>
+</body>
+</html>
