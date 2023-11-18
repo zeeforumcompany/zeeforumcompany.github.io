@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>API Response to Object</title>
+
+	<style>
+		.wrapper{width:50%;margin:0 auto}
+		.form-fields{margin:10px}
+		.form-button{margin:0 10px}
+		textarea{width:100%;padding:10px;border-radius:4px;font-size:14px}
+		label{font-weight:700;font-family:Arial,Helvetica,sans-serif;font-size:18px}
+
+		/* Bootstrap Style */
+		.btn{display:inline-block;font-weight:400;color:#212529;text-align:center;vertical-align:middle;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;cursor:pointer}
+		.btn-secondary{color:#fff;background-color:#6c757d;border-color:#6c757d;box-shadow:none}
+		.btn-primary{color:#fff;background-color:#007bff;border-color:#007bff;box-shadow:none}
+		.btn-primary:hover{color:#fff;background-color:#0069d9;border-color:#0062cc}
+		.btn-secondary:hover{color:#fff;background-color:#5a6268;border-color:#545b62}
+		a{color:#007bff;text-decoration:none;background-color:transparent;font-size:18px}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+		<!-- add a back button with back angle symbol -->
+		<div class="form form-fields">
+			<a href="/">&#8249; Back</a>
+		</div>
+
+		<div class="form form-fields">
+			<label>API Response</label>
+			<textarea name="text" id="text" cols="30" rows="30"></textarea>
+		</div>
+
+		<div class="form form-button">
+			<button type="button" class="btn btn-primary" id="build">Build Contract</button>
+			<button type="button" class="btn btn-secondary" id="copy">Copy Contract</button>
+		</div>
+
+		<div class="form form-fields">
+			<label>JSON</label>
+			<textarea name="json" id="json" cols="30" rows="10"></textarea>
+		</div>
+	</div>
+
+	<script>
+		function responseToOutputContract(response, keyForArray = '') {
+			let contractJson = {};
+
+			for (let key in response) {
+				let is_setup = false;
+				let is_array = Array.isArray(response[key]);
+
+				if (is_array) {
+					contractJson[key] = {
+						type: 'array',
+						items: {
+							title: `${key} Item 1`,
+							type: 'object',
+							properties: responseToOutputContract(response[key], key),
+							additionalProperties: true
+						}
+					};
+
+					is_setup = true;
+				}
+
+				if (typeof response[key] === 'object' && !is_setup) {
+					if (key >= 0) {
+						return responseToOutputContract(response[key], keyForArray);
+					}
+
+					contractJson[key] = {
+						type: 'object',
+						properties: responseToOutputContract(response[key], key),
+						additionalProperties: true
+					};
+
+					is_setup = true;
+				}
+
+				// console.log(typeof response[key], keyForArray);
+
+				if (!is_setup) {
+					contractJson[key] = {
+						type: typeof response[key]
+					};
+				}
+			}
+
+			return contractJson;
+		}
+
+		document.getElementById('build').addEventListener('click', function() {
+			// Get text area value
+			var text = document.getElementById('text').value;
+			var jsonString = "";
+
+			if (text && text !== undefined) {
+				try {
+					var json = JSON.parse(text);
+
+					// Convert json array to json string
+					jsonString = JSON.stringify(responseToOutputContract(json));
+				} catch (e) {
+					// console.log(e); // Error: not valid JSON
+				}
+			}
+
+			// Set json string to json text area
+			document.getElementById('json').value = jsonString;
+		});
+
+		// Copy json text area value to clipboard
+		document.getElementById('copy').addEventListener('click', function() {
+			// Select Textarea by ID
+			var jsonTextarea = document.getElementById('json');
+			jsonTextarea.select();
+
+			// Copy textarea value to clipboard
+			document.execCommand('copy');
+		});
+	</script>
+</body>
+</html>
