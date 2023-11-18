@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Find New Tags</title>
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+	<div class="wrapper">
+		<!-- add a back button with back angle symbol -->
+		<div class="form form-fields">
+			<a href="/">&#8249; Back</a>
+		</div>
+
+		<div class="form form-fields">
+			<label>Tags To Compare</label>
+			<textarea name="tags" id="tags" cols="30" rows="10"></textarea>
+		</div>
+
+		<div class="form form-fields">
+			<label>Tags From API</label>
+			<textarea name="apiTags" id="apiTags" cols="30" rows="10"></textarea>
+		</div>
+
+		<div class="form form-button">
+			<button type="button" class="btn btn-primary" id="build">Compare Tags</button>
+			<button type="button" class="btn btn-secondary" id="copy">Copy JSON</button>
+		</div>
+
+		<div class="form form-fields">
+			<label>New Tags</label>
+			<textarea name="json" id="json" cols="30" rows="10"></textarea>
+		</div>
+	</div>
+
+	<script>
+		function findTag(tagText, apiTags) {
+			console.log(tagText, apiTags);
+			var isFound = false;
+			for (var j = 0; j < apiTags.length; j++) {
+				var apiTag = apiTags[j];
+				if (tagText == apiTag.tagName) {
+					isFound = true;
+					break;
+				}
+			}
+
+			return isFound;
+		}
+
+		document.getElementById('build').addEventListener('click', function() {
+			// Get text area value
+			var tagsText = document.getElementById('tags').value;
+			var apiTagsText = document.getElementById('apiTags').value;
+			var isTagJson = false;
+			var isApiTagJson = false;
+
+			// New Tags
+			var newTags = [];
+
+			// Check if tags is json
+			try {
+				var tags = JSON.parse(tagsText);
+				isTagJson = true;
+			} catch (e) {
+				isTagJson = false;
+			}
+
+			// Check if apiTags is json
+			try {
+				var apiResponse = JSON.parse(apiTagsText);
+
+				if (apiResponse && apiResponse !== undefined) {
+					var apiTags = apiResponse.tags;
+					isApiTagJson = true;
+				}
+			} catch (e) {
+				isApiTagJson = false;
+			}
+
+			if (isApiTagJson) {
+				if (isTagJson) {
+					for (var i = 0; i < tags.length; i++) {
+						var tag = tags[i];
+						var isFound = findTag(tag.tagName, apiTags);
+						if (!isFound) {
+							newTags.push({tagName: tag});
+						}
+					}
+				} else if (tagsText && tagsText !== undefined && tagsText !== "") {	// tags or in text
+					// Split textarea value by new line
+					var textArray = tagsText.split('\n');
+
+					for (var i = 0; i < textArray.length; i++) {
+						var tag = textArray[i];
+						var isFound = findTag(tag, apiTags);
+						console.log(isFound);
+						if (!isFound) {
+							newTags.push({tagName: tag});
+						}
+					}
+				}
+			}
+			
+			var jsonString = "";
+
+			if (newTags.length > 0) {
+				// Convert json array to json string
+				jsonString = JSON.stringify(newTags);
+			}
+
+			// Set json string to json text area
+			document.getElementById('json').value = jsonString;
+		});
+	</script>
+	<script src="./js/common.js"></script>
+</body>
+</html>

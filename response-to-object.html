@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>API Response to Object</title>
-	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
 	<div class="wrapper">
@@ -96,16 +96,7 @@
 			// Set json string to json text area
 			document.getElementById('json').value = jsonString;
 		});
-
-		// Copy json text area value to clipboard
-		document.getElementById('copy').addEventListener('click', function() {
-			// Select Textarea by ID
-			var jsonTextarea = document.getElementById('json');
-			jsonTextarea.select();
-
-			// Copy textarea value to clipboard
-			document.execCommand('copy');
-		});
 	</script>
+	<script src="./js/common.js"></script>
 </body>
 </html>
