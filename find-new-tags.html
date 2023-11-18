@@ -36,17 +36,26 @@
 
 	<script>
 		function findTag(tagText, apiTags) {
-			console.log(tagText, apiTags);
 			var isFound = false;
 			for (var j = 0; j < apiTags.length; j++) {
 				var apiTag = apiTags[j];
-				if (tagText == apiTag.tagName) {
+				if (tagText.toLowerCase() == apiTag.tagName.toLowerCase()) {
 					isFound = true;
 					break;
 				}
 			}
 
 			return isFound;
+		}
+
+		// Return Unique Array
+		function uniqueArray(arr) {
+			return arr.filter((value, index) => {
+				const _value = JSON.stringify(value);
+				return index === arr.findIndex(obj => {
+					return JSON.stringify(obj).toLowerCase() === _value.toLowerCase();
+				});
+			});
 		}
 
 		document.getElementById('build').addEventListener('click', function() {
@@ -85,7 +94,7 @@
 						var tag = tags[i];
 						var isFound = findTag(tag.tagName, apiTags);
 						if (!isFound) {
-							newTags.push({tagName: tag});
+							newTags.push(tag);
 						}
 					}
 				} else if (tagsText && tagsText !== undefined && tagsText !== "") {	// tags or in text
@@ -95,7 +104,6 @@
 					for (var i = 0; i < textArray.length; i++) {
 						var tag = textArray[i];
 						var isFound = findTag(tag, apiTags);
-						console.log(isFound);
 						if (!isFound) {
 							newTags.push({tagName: tag});
 						}
@@ -104,8 +112,8 @@
 			}
 			
 			var jsonString = "";
-
 			if (newTags.length > 0) {
+				var newTags = uniqueArray(newTags);
 				// Convert json array to json string
 				jsonString = JSON.stringify(newTags);
 			}
