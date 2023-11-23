@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CURL to Javascript Request</title>
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+	<div class="wrapper">
+		<!-- add a back button with back angle symbol -->
+		<div class="form form-fields">
+			<a href="/">&#8249; Back</a>
+		</div>
+
+		<div class="form form-fields">
+			<label>CURL</label>
+			<textarea name="curlRequest" id="curlRequest" cols="30" rows="10">curl --location 'https://localhost:7224/WeatherForecast/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Basic MTIzOjQzMjE=' \
+--data '{
+    "name": "{{tagName}}"
+}'</textarea>
+		</div>
+
+		<div class="form form-fields">
+			<label>Variables</label>
+			<textarea name="apiVariables" id="apiVariables" cols="30" rows="10"></textarea>
+		</div>
+
+		<div class="form form-button">
+			<button type="button" class="btn btn-primary" id="sendRequest">Send</button>
+		</div>
+	</div>
+
+	<script>
+		document.getElementById('sendRequest').addEventListener('click', function() {
+			var variables = document.getElementById('apiVariables').value;
+			response = convertCurlToApiRequest();
+
+			sendRequestForObjects(variables, response);
+		});
+	</script>
+	<script src="./js/axios.min.js"></script>
+	<script src="./js/common.js"></script>
+</body>
+</html>
