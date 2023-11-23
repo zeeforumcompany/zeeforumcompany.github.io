@@ -1,5 +1,5 @@
 .wrapper{width:50%;margin:0 auto}
-.form-fields{margin:10px}
+.form-fields, .reponse-section {margin:10px}
 .form-button{margin:0 10px}
 textarea{width:100%;padding:10px;border-radius:4px;font-size:14px}
 label{font-weight:700;font-family:Arial,Helvetica,sans-serif;font-size:18px}
@@ -11,3 +11,13 @@ label{font-weight:700;font-family:Arial,Helvetica,sans-serif;font-size:18px}
 .btn-primary:hover{color:#fff;background-color:#0069d9;border-color:#0062cc}
 .btn-secondary:hover{color:#fff;background-color:#5a6268;border-color:#545b62}
 a{color:#007bff;text-decoration:none;background-color:transparent;font-size:18px}
+.text-danger{color:#f98792 !important;}
+.text-success{color:#4bc267 !important;}
+.bg-danger{background-color:#f98792 !important;}
+.bg-success{background-color:#4bc267 !important;}
+
+
+.request-details {margin: 10px 0;border: 1px solid #007bff;padding: 15px;}
+.request-method {display:inline-block;width:8%;}
+.request-url {display:inline-block;width:78%;}
+.request-status {display:inline-block;width:10%;text-align:right;}
