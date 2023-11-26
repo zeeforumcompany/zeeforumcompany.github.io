@@ -177,19 +177,23 @@ function parseResponseData(data) {
 }
 
 // Send request to API using axios
-async function sendRequest(request) {
+async function sendRequest(request, dataForRequestData = {}) {
 	if (typeof request.data === 'string') {
 		request.data = JSON.parse(request.data);
 	}
 
 	var responseData = "";
 	var statusCode = "";
-	var requestInfo = request;
+	var requestInfo = JSON.parse(JSON.stringify(request));
+
+	if (!isDefined(requestInfo.data)) {
+		requestInfo.data = dataForRequestData;
+	}
 
 	const instance = axios.create();
 
 	// Send Request
-	await instance({
+	return await instance({
 		method: request.method,
 		url: request.url,
 		headers: request.headers,
@@ -199,6 +203,11 @@ async function sendRequest(request) {
 		responseData = parseResponseData(response.data);
 		statusCode = response.status;
 		globalSuccessRequestsData.push(requestInfo.data);
+
+		return {
+			data: response.data,
+			status: statusCode
+		};
 	}).catch(function (error) {
 		// handle error
 		responseData = parseResponseData(error);
@@ -207,8 +216,15 @@ async function sendRequest(request) {
 			statusCode = error.response.status;
 		}
 		globalFailedRequestsData.push(requestInfo.data);
-	}).then(function () {
+
+		return {
+			data: error,
+			status: statusCode
+		};
+	}).then(function (res) {
 		toggleResponseSection(requestInfo, responseData, statusCode);
+		
+		return res;
 	});
 }
 
@@ -240,4 +256,25 @@ async function sendRequestForObjects(jsonString, request) {
 	// } catch (e) {
 	// 	alert('Error: ' + e.message);
 	// }
+}
+
+/**
+ * Value exist for variables
+ */
+function isDefined(variables) {
+	if (variables === null || variables === '' || variables === undefined) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * Remove Content from Existing Response Section
+ */
+function removeContentFromExistingResponseSection() {
+	var existingResponseSection = document.getElementById('responseSection');
+	if (existingResponseSection) {
+		existingResponseSection.innerHTML = "";
+	}
 }

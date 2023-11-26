@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CURL to Javascript Request</title>
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+	<div class="wrapper">
+		<!-- add a back button with back angle symbol -->
+		<div class="form form-fields">
+			<a href="/">&#8249; Back</a>
+		</div>
+
+		<div class="form form-fields">
+			<label>CURL</label>
+			<textarea name="curlRequest" id="curlRequest" cols="30" rows="10"></textarea>
+		</div>
+
+		<div class="form form-fields">
+			<label>Skills</label>
+			<textarea name="skills" id="skills" cols="30" rows="10"></textarea>
+		</div>
+
+		<div class="form form-fields">
+			<label>Dispositions</label>
+			<textarea name="dispositions" id="dispositions" cols="30" rows="10"></textarea>
+		</div>
+
+		<div class="form form-button">
+			<button type="button" class="btn btn-primary" id="sendRequest">Send</button>
+		</div>
+	</div>
+
+	<script>
+		document.getElementById('sendRequest').addEventListener('click', async function() {
+			removeContentFromExistingResponseSection();
+			globalFailedRequestsData = [];
+			globalSuccessRequestsData = [];
+
+			var skills = document.getElementById('skills').value;
+			console.log("🚀 ~ file: skills-disposition.html:39 ~ document.getElementById ~ skills:", skills)
+			var dispositions = document.getElementById('dispositions').value;
+			console.log("🚀 ~ file: skills-disposition.html:41 ~ document.getElementById ~ dispositions:", dispositions)
+			request = convertCurlToApiRequest();
+
+			if (!isDefined(dispositions)) {
+				var dispositions = [];
+			}
+
+			if (isDefined(skills)) {
+				skills = JSON.parse(skills);
+
+				for (var i = 0; i < skills.length; i++) {
+					var newRequestInfo = {};
+					
+					newRequestInfo = JSON.parse(JSON.stringify(request));
+					newRequestInfo.url = replaceDynamicData(newRequestInfo.url, skills[i], 'string');
+
+					var response = null;
+					response = await sendRequest(newRequestInfo, skills[i]);
+					if (isDefined(response.status) && response.status >= 200 && response.status <= 299) {
+						var skillUpdateRequest = {};
+						skillUpdateRequest.skill = response.data;
+
+						delete skillUpdateRequest.skill.skillId;
+						if (!isDefined(skillUpdateRequest.skill.emailFromAddress)) {
+							delete skillUpdateRequest.skill.emailFromAddress;
+						}
+
+						if (!isDefined(skillUpdateRequest.skill.callSuppressionScriptId)) {
+							delete skillUpdateRequest.skill.callSuppressionScriptId;
+						}
+
+						if (!isDefined(skillUpdateRequest.skill.screenPopTriggerEvent)) {
+							delete skillUpdateRequest.skill.screenPopTriggerEvent;
+						}
+
+						skillUpdateRequest.skill.dispositions = dispositions;
+						
+						newRequestInfo.data = skillUpdateRequest;
+						newRequestInfo.method = "PUT";
+						response = await sendRequest(newRequestInfo, skills[i]);
+					}
+				}
+
+				prependFailedAndSuccessRequestData(globalFailedRequestsData, globalSuccessRequestsData);
+			}
+		});
+	</script>
+	<script src="./js/axios.min.js"></script>
+	<script src="./js/common.js"></script>
+</body>
+</html>
