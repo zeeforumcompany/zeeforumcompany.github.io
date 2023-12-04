@@ -58,8 +58,8 @@ function convertToJSON(textData) {
 			
 			if (openTime.toLowerCase() === "closed" || closeTime.toLowerCase() === "closed") {
 				isClosedAllDay = true;
-				openTime = "12:00 AM";
-				closeTime = "11:59 PM";
+				openTime = "";
+				closeTime = "";
 			} else if (
 				trimOpenTime === "24 hrs" || 
 				trimOpenTime === "24hrs" || 
@@ -69,11 +69,11 @@ function convertToJSON(textData) {
 				trimOpenTime === "24 h" || 
 				closeTime.toLowerCase() === "n/a"
 			) {
-				openTime = "12:00 AM";
-				closeTime = "11:59 PM";
+				openTime = "00:00:00";
+				closeTime = "23:59:59";
 			} else {
-				openTime = convertTo12HourFormat(openTime);
-				closeTime = convertTo12HourFormat(closeTime);
+				openTime = convertToFormattedTime(openTime);
+				closeTime = convertToFormattedTime(closeTime);
 			}
 			
 			jsonData.days.push({
@@ -89,6 +89,19 @@ function convertToJSON(textData) {
 	});
 
 	return jsonData;
+}
+
+function convertToFormattedTime(time) {
+    var [hours, minutes] = time.split(':');
+
+    // Add leading zeros if needed
+    hours = hours.padStart(2, '0');
+    minutes = minutes.padStart(2, '0');
+
+    // Create the formatted time string
+    var formattedTime = hours + ':' + minutes + ':00';
+
+    return formattedTime;
 }
 
 function convertTo12HourFormat(time24) {
