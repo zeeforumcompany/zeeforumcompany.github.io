@@ -36,7 +36,7 @@ function convertToJSON(textData) {
 		"notes": "",
 		"days": [],
 		"holidays": [],
-		"overrideBranch": "",https://github.com/axiftaj/Flutter-Bootcamp-Roadmap
+		"overrideBranch": "",
 		"overrideExpirationDate": "",
 		"skills": []
 	};
