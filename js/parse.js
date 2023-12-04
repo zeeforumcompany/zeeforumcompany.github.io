@@ -25,6 +25,7 @@ function processTextarea() {
 
   // Now jsonArray contains the array of JSON objects
   console.log(jsonArray);
+  return jsonArray;
 }
 
 function convertToJSON(textData) {
