@@ -87,8 +87,33 @@ function replaceDynamicData(data, obj, type = 'data') {
 
 		// Use replace with a callback function to dynamically replace variables
 		var resultString = data.replace(regex, (match, variable) => {
-			// Check if the variable exists in the replacements object
-			return obj.hasOwnProperty(variable) ? obj[variable] : null;
+			// Use regular expression to extract the parts
+			var match1 = variable.match(/([a-zA-Z]+)\[(\d+)\]/);
+			var match2 = variable.match(/([a-zA-Z]+)\.(.+)/);
+			var match3 = variable.match(/([a-zA-Z]+)\[(\d+)\]\.(.+)/);
+
+			// Check if the match was successful
+			if (match3) {
+				// Extracted values
+				var firstPart = match3[1]; // variable name
+				var secondPart = match3[2]; // index
+				var thirdPart = match3[3];  // object key
+
+				// Display the results
+				return obj.hasOwnProperty(firstPart) ? JSON.stringify(obj[firstPart][secondPart][thirdPart]) : null;
+			} else if (match2 || match1) {
+				var match = match1 || match2;
+
+				// Extracted values
+				var firstPart = match[1]; // variable name
+				var secondPart = match[2]; // index / object
+
+				// Display the results
+				return obj.hasOwnProperty(firstPart) ? JSON.stringify(obj[firstPart])[secondPart] : null;
+			} else {
+				// Check if the variable exists in the replacements object
+				return obj.hasOwnProperty(variable) ? JSON.stringify(obj[variable]) : null;
+			}
 		});
 	
 		if (type === 'data') {
