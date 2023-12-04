@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disposition Text to JSON</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <div class="wrapper">
+		<!-- add a back button with back angle symbol -->
+		<div class="form form-fields">
+			<a href="/">&#8249; Back</a>
+		</div>
+
+		<div class="form form-fields">
+			<label>Dispositions (Line by Line)</label>
+			<textarea name="dispositions" id="dispositions" cols="30" rows="10"></textarea>
+		</div>
+
+		<div class="form form-button">
+			<button type="button" class="btn btn-primary" id="build" onclick="dispositionTextToJSON();">Generate JSON</button>
+			<button type="button" class="btn btn-secondary" id="copy">Copy JSON</button>
+		</div>
+
+		<div class="form form-fields">
+			<label>JSON</label>
+			<textarea name="json" id="json" cols="30" rows="10"></textarea>
+		</div>
+	</div>
+
+    <script src="js/common.js"></script>
+    <script>
+        function dispositionTextToJSON() {
+            // Get text from textarea
+            var inputText = document.getElementById('dispositions').value;
+
+            // Split lines and remove empty lines
+            var lines = inputText.split('\n').filter(function(line) {
+                return line.trim() !== '';
+            });
+
+            // Convert to JSON format
+            var jsonData = [];
+            var currentDispositions = [];
+
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+
+                if (line !== "") {
+                    currentDispositions.push({
+                        "dispositionName": line,
+                        "isPreviewDisposition": true,
+                        "classificationId": null
+                    });
+
+                    // Create a new array after every 50 objects
+                    if (currentDispositions.length === 50 || i === lines.length - 1) {
+                        jsonData.push({
+                            "dispositions": currentDispositions
+                        });
+                        currentDispositions = [];
+                    }
+                }
+            }
+
+            // Convert to JSON string with indentation
+            var jsonString = JSON.stringify(jsonData, null, 2);
+            console.log("🚀 ~ file: disposition.html:68 ~ dispositionTextToJSON ~ jsonData:", jsonData)
+
+            // Display the JSON string
+            document.getElementById('json').value = jsonString;
+        }
+    </script>
+</body>
+</html>
