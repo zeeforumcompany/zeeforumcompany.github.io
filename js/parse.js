@@ -18,9 +18,9 @@ function processTextarea() {
 
   if (textData !== "") {
     let jsonObject = convertToJSON(textData);
-
+	let jsonHourOfOperation = { "hourOfOperation": jsonObject };
     if (isDefined(jsonObject.profileName) && jsonObject.profileName !== "") {
-      jsonArray.push(jsonObject);
+      jsonArray.push(jsonHourOfOperation);
     }
   }
 
