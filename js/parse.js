@@ -36,7 +36,7 @@ function convertToJSON(textData) {
 		"notes": "",
 		"days": [],
 		"holidays": [],
-		"overrideBranch": "",
+		"overrideBranch": "",https://github.com/axiftaj/Flutter-Bootcamp-Roadmap
 		"overrideExpirationDate": "",
 		"skills": []
 	};
@@ -49,17 +49,57 @@ function convertToJSON(textData) {
 			jsonData.profileName = line.split(':')[1].trim();
 		} else if (days.includes(line.split('\t')[0])) {
 			currentDay = line.split('\t')[0];
+			let isClosedAllDay = false;
+			let openTime = line.split('\t')[1];
+			let closeTime = line.split('\t')[2];
+
+			let trimOpenTime = openTime.trim().toLowerCase();
+			
+			if (openTime.toLowerCase() === "closed" || closeTime.toLowerCase() === "closed") {
+				isClosedAllDay = true;
+				openTime = "12:00 AM";
+				closeTime = "11:59 PM";
+			} else if (
+				trimOpenTime === "24 hrs" || 
+				trimOpenTime === "24hrs" || 
+				trimOpenTime === "24 hours" || 
+				trimOpenTime === "24hours" || 
+				trimOpenTime === "24h" || 
+				trimOpenTime === "24 h" || 
+				closeTime.toLowerCase() === "n/a"
+			) {
+				openTime = "12:00 AM";
+				closeTime = "11:59 PM";
+			} else {
+				openTime = convertTo12HourFormat(openTime);
+				closeTime = convertTo12HourFormat(closeTime);
+			}
+			
 			jsonData.days.push({
 				"day": currentDay,
-				"openTime": line.split('\t')[1],
-				"closeTime": line.split('\t')[2],
+				"openTime": openTime,
+				"closeTime": closeTime,
 				"hasAdditionalHours": false,
 				"additionalOpenTime": "",
 				"additionalCloseTime": "",
-				"isClosedAllDay": false
+				"isClosedAllDay": isClosedAllDay
 			});
 		}
 	});
 
 	return jsonData;
+}
+
+function convertTo12HourFormat(time24) {
+    // Extract hours and minutes
+    var [hours, minutes] = time24.split(':');
+
+    // Convert to 12-hour format
+    var period = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; // Handle midnight (0) and noon (12)
+
+    // Format the result
+    var time12 = hours + ':' + minutes + ' ' + period;
+
+    return time12;
 }
