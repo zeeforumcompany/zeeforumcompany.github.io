@@ -36,11 +36,6 @@
 			var json = processTextarea();
 			document.getElementById('json').value = JSON.stringify(json, null, 2);
 		});
-
-		document.getElementById('copy').addEventListener('click', async function() {
-			var json = document.getElementById('json').value;
-			copyToClipboard(json);
-		});
 	</script>
 </body>
 </html>
