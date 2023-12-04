@@ -36,10 +36,10 @@ function convertToJSON(textData) {
 		"description": "",
 		"notes": "",
 		"days": [],
-		"holidays": [],
-		"overrideBranch": "",
-		"overrideExpirationDate": "",
-		"skills": []
+		// "holidays": [],
+		"overrideBranch": "None",
+		"overrideExpirationDate": ""
+		// "skills": []
 	};
 
 	let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
