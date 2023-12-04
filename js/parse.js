@@ -7,8 +7,8 @@ function processTextarea() {
   for (const line of lines) {
     if ((line.startsWith('Hours of Operation Profile #') || line.startsWith('Hours of Operation') || line.startsWith('Hours of')) && textData !== "") {
       let jsonObject = convertToJSON(textData);
-	  let jsonHourOfOperation = { "hourOfOperation": jsonObject };
-      jsonArray.push(jsonObject);
+	let jsonHourOfOperation = { "hourOfOperation": jsonObject };
+      jsonArray.push(jsonHourOfOperation);
 
       textData = "";
     }
