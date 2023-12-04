@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Find New Tags</title>
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+	<div class="wrapper">
+		<!-- add a back button with back angle symbol -->
+		<div class="form form-fields">
+			<a href="/">&#8249; Back</a>
+		</div>
+
+		<div class="form form-fields">
+			<label>Text Data</label>
+			<textarea name="textData" id="textData" cols="30" rows="10"></textarea>
+		</div>
+
+		<div class="form form-button">
+			<button type="button" class="btn btn-primary" id="build">Generate</button>
+			<button type="button" class="btn btn-secondary" id="copy">Copy JSON</button>
+		</div>
+
+		<div class="form form-fields">
+			<label>JSON</label>
+			<textarea name="json" id="json" cols="30" rows="10"></textarea>
+		</div>
+	</div>
+
+	<script src="./js/common.js"></script>
+	<script src="./js/parse.js"></script>
+	<script>
+		document.getElementById('build').addEventListener('click', async function() {
+			var json = processTextarea();
+			document.getElementById('json').value = JSON.stringify(json, null, 2);
+		});
+
+		document.getElementById('copy').addEventListener('click', async function() {
+			var json = document.getElementById('json').value;
+			copyToClipboard(json);
+		});
+	</script>
+</body>
+</html>
