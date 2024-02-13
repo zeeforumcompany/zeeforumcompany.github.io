@@ -15,17 +15,38 @@
 
 		<div class="form form-fields">
 			<label>CURL</label>
-			<textarea name="curlRequest" id="curlRequest" cols="30" rows="10"></textarea>
+			<textarea name="curlRequest" id="curlRequest" cols="30" rows="10">curl --location --request GET 'https://BASE_URL/incontactapi/services/v28.0/skills/{{skillId}}' \
+--header 'Authorization: Bearer REPLACE_WITH_TOKEN'</textarea>
 		</div>
 
 		<div class="form form-fields">
 			<label>Skills</label>
-			<textarea name="skills" id="skills" cols="30" rows="10"></textarea>
+			<textarea name="skills" id="skills" cols="30" rows="10">[
+	{
+		"skillId": 8374711
+	},
+	{
+		"skillId": 10562664
+	}
+]</textarea>
 		</div>
 
 		<div class="form form-fields">
 			<label>Dispositions</label>
-			<textarea name="dispositions" id="dispositions" cols="30" rows="10"></textarea>
+			<textarea name="dispositions" id="dispositions" cols="30" rows="10">[
+	{
+		"dispositionId": 6985,
+		"dispositionName": "AU: Asset",
+		"priority": 1,
+		"isPreviewDisposition": false
+	},
+	{
+		"dispositionId": 6994,
+		"dispositionName": "AU: Contact Info",
+		"priority": 2,
+		"isPreviewDisposition": false
+	}
+]</textarea>
 		</div>
 
 		<div class="form form-button">
@@ -47,6 +68,8 @@
 
 			if (!isDefined(dispositions)) {
 				var dispositions = [];
+			} else {
+				dispositions = JSON.parse(dispositions);
 			}
 
 			if (isDefined(skills)) {
