@@ -96,7 +96,13 @@ function convertToFormattedTime(time) {
 
     // Add leading zeros if needed
     hours = hours.padStart(2, '0');
-    minutes = minutes.padStart(2, '0');
+
+    if (minutes !== null && minutes !== undefined && minutes !== "")
+    {
+    	minutes = minutes.padStart(2, '0');
+    } else {
+	minutes = "00"
+    }
 
     // Create the formatted time string
     var formattedTime = hours + ':' + minutes + ':00';
