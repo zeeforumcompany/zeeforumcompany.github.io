@@ -17,7 +17,10 @@ a{color:#007bff;text-decoration:none;background-color:transparent;font-size:18px
 .bg-success{background-color:#4bc267 !important;}
 
 
+.bg-gray {background-color:#e8e8e8 !important;}
+
 .request-details {margin: 10px 0;border: 1px solid #007bff;padding: 15px;}
 .request-method {display:inline-block;width:8%;}
 .request-url {display:inline-block;width:78%;}
 .request-status {display:inline-block;width:10%;text-align:right;}
+.font-custom {font-family: Verdana, 'Courier New', Courier, monospace;}

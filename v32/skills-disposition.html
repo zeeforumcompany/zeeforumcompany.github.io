@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CURL to Javascript Request</title>
+	<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+	<div class="wrapper">
+		<!-- add a back button with back angle symbol -->
+		<div class="form form-fields">
+			<a href="/">&#8249; Back</a>
+		</div>
+
+		<h3 class="form form-fields font-custom">Skills Diposition v32</h3>
+
+		<div class="form form-fields font-custom">
+			<p><b>* Note</b>: Use these tools on your own risk. For any data loss/damage we will not be responsible. Thank you</p>
+		</div>
+
+		<div class="form form-fields">
+			<label>CURL</label>
+			<textarea name="curlRequest" id="curlRequest" cols="30" rows="10">curl --location --request GET 'https://BASE_URL/incontactapi/services/v32.0/skills/{{skillId}}' \
+--header 'Authorization: Bearer REPLACE_WITH_TOKEN'</textarea>
+		</div>
+
+		<div class="form form-fields">
+			<label>Skills</label>
+			<textarea name="skills" id="skills" cols="30" rows="10">[
+	{
+		"skillId": 8374711
+	},
+	{
+		"skillId": 10562664
+	}
+]</textarea>
+		</div>
+
+		<div class="form form-fields">
+			<label>Dispositions</label>
+			<textarea name="dispositions" id="dispositions" cols="30" rows="10">[
+	{
+		"dispositionId": 6985,
+		"dispositionName": "AU: Asset",
+		"priority": 1,
+		"isPreviewDisposition": false
+	},
+	{
+		"dispositionId": 6994,
+		"dispositionName": "AU: Contact Info",
+		"priority": 2,
+		"isPreviewDisposition": false
+	}
+]</textarea>
+		</div>
+
+		<div class="form form-fields font-custom">
+			<label>Enable Disposition</label>
+			<p>Settings for Enable Disposition, e.g. <code class="bg-gray">Wrap_Up_Code_Id:Disposition_Required_Boolean:ACW_Wrap_Up_Time_Seconds</code>, By default we will required disposition:</p>
+			<p>Disposition Required: 123:true:0</p>
+			<p>ACW Time: 123:false:30</p>
+			<textarea name="disposition_settings" id="disposition_settings" cols="30" rows="10">123:true:0</textarea>
+		</div>
+
+		<div class="form form-button">
+			<button type="button" class="btn btn-primary" id="sendRequest">Send</button>
+		</div>
+	</div>
+
+	<script>
+		document.getElementById('sendRequest').addEventListener('click', async function() {
+			removeContentFromExistingResponseSection();
+			globalFailedRequestsData = [];
+			globalSuccessRequestsData = [];
+
+			var skills = document.getElementById('skills').value;
+			console.log("🚀 ~ file: skills-disposition.html:39 ~ document.getElementById ~ skills:", skills);
+			var dispositions = document.getElementById('dispositions').value;
+			console.log("🚀 ~ file: skills-disposition.html:41 ~ document.getElementById ~ dispositions:", dispositions);
+
+			var dispositionSettings = document.getElementById('disposition_settings').value;
+			var dispositionSettingsArr = dispositionSettings.toString().split(':');
+
+			// Disposition Settings
+			dispositionSettingsArr[0] = isDefined(dispositionSettingsArr[0]) ? dispositionSettingsArr[0] : null;
+			dispositionSettingsArr[1] = dispositionSettingsArr[1] != undefined && (dispositionSettingsArr[1] == "false" || dispositionSettingsArr[1] == false)  ? false : true;
+			dispositionSettingsArr[2] = isDefined(dispositionSettingsArr[2]) ? dispositionSettingsArr[2] : 0;
+
+			console.log("🚀 ~ file: skills-disposition.html:44 ~ dispositionSettingsArr:", JSON.stringify(dispositionSettingsArr));
+
+			request = convertCurlToApiRequest();
+
+			if (!isDefined(dispositions)) {
+				var dispositions = [];
+			} else {
+				dispositions = JSON.parse(dispositions);
+			}
+
+			if (isDefined(skills)) {
+				skills = JSON.parse(skills);
+
+				for (var i = 0; i < skills.length; i++) {
+					var newRequestInfo = {};
+					
+					newRequestInfo = JSON.parse(JSON.stringify(request));
+					newRequestInfo.url = replaceDynamicData(newRequestInfo.url, skills[i], 'string');
+
+					var response = null;
+					response = await sendRequest(newRequestInfo, skills[i]);
+					if (isDefined(response.status) && response.status >= 200 && response.status <= 299) {
+						var skillUpdateRequest = {};
+						skillUpdateRequest.skill = response.data;
+
+						delete skillUpdateRequest.skill.skillId;
+						if (!isDefined(skillUpdateRequest.skill.emailFromAddress)) {
+							delete skillUpdateRequest.skill.emailFromAddress;
+						}
+
+						if (!isDefined(skillUpdateRequest.skill.callSuppressionScriptId)) {
+							delete skillUpdateRequest.skill.callSuppressionScriptId;
+						}
+
+						if (!isDefined(skillUpdateRequest.skill.screenPopTriggerEvent)) {
+							delete skillUpdateRequest.skill.screenPopTriggerEvent;
+						}
+
+						if (skillUpdateRequest.skill.acwTypeId === 1) {
+							skillUpdateRequest.skill.acwTypeId = 2;
+						}
+
+						if (!isDefined(skillUpdateRequest.skill.stateIdACW)) {
+							skillUpdateRequest.skill.stateIdACW = dispositionSettingsArr[0];
+						}
+
+						if (!isDefined(skillUpdateRequest.skill.requireDisposition) || skillUpdateRequest.skill.requireDisposition !== dispositionSettingsArr[1]) {
+							skillUpdateRequest.skill.requireDisposition = dispositionSettingsArr[1];
+						}
+
+						if (!isDefined(skillUpdateRequest.skill.maxSecondsACW) || skillUpdateRequest.skill.maxSecondsACW !== dispositionSettingsArr[2]) {
+							skillUpdateRequest.skill.maxSecondsACW = dispositionSettingsArr[2];
+						}
+
+						skillUpdateRequest.skill.dispositions = dispositions;
+						
+						newRequestInfo.data = skillUpdateRequest;
+						newRequestInfo.method = "PUT";
+						response = await sendRequest(newRequestInfo, skills[i]);
+					}
+				}
+
+				prependFailedAndSuccessRequestData(globalFailedRequestsData, globalSuccessRequestsData);
+			}
+		});
+	</script>
+	<script src="../js/axios.min.js"></script>
+	<script src="../js/common.js"></script>
+</body>
+</html>
