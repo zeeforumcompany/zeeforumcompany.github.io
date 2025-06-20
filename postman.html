@@ -15,12 +15,21 @@
 
 		<div class="form form-fields">
 			<label>CURL</label>
-			<textarea name="curlRequest" id="curlRequest" cols="30" rows="10"></textarea>
+			<textarea name="curlRequest" id="curlRequest" cols="30" rows="10">curl --location --request POST 'https://jsonplaceholder.typicode.com/posts?name={{name}}&query={{query}}' \
+--header 'Content-Type: application/json' \
+--data '{
+    "title": "{{name}}",
+    "body": "{{query}}",
+    "userId": 1
+}'</textarea>
 		</div>
 
 		<div class="form form-fields">
 			<label>Variables</label>
-			<textarea name="apiVariables" id="apiVariables" cols="30" rows="10"></textarea>
+			<textarea name="apiVariables" id="apiVariables" cols="30" rows="10">[{
+"name":"Test User",
+"query":"Testing"
+}]</textarea>
 		</div>
 
 		<div class="form form-button">

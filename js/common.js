@@ -127,7 +127,7 @@ function replaceDynamicData(data, obj, type = 'data') {
 				return obj.hasOwnProperty(firstPart) ? JSON.stringify(obj[firstPart])[secondPart] : null;
 			} else {
 				// Check if the variable exists in the replacements object
-				return obj.hasOwnProperty(variable) ? JSON.stringify(obj[variable]) : null;
+				return obj.hasOwnProperty(variable) ? obj[variable] : null;
 			}
 		});
 	
