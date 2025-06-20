@@ -15,6 +15,21 @@ if (copyBtn) {
 	});
 }
 
+var toggle = document.querySelector('.toggle');
+if (toggle) {
+	toggle.addEventListener('click', function() {
+		var toggleElement = toggle.getAttribute('data-toggle');
+		var toggleElementToShow = document.getElementById(toggleElement);
+		if (toggleElementToShow) {
+			if (toggleElementToShow.classList.contains('d-none')) {
+				toggleElementToShow.classList.remove('d-none');
+			} else {
+				toggleElementToShow.classList.add('d-none');
+			}
+		}
+	});
+}
+
 function removeStringAndSingleQuote(string, removeString = '') {
 	return string.replaceAll(removeString, '').replaceAll('\'', '');
 }

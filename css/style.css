@@ -1,3 +1,4 @@
+* {font-family: Verdana, 'Courier New', Courier, monospace;}
 .wrapper{width:50%;margin:0 auto}
 .form-fields, .reponse-section {margin:10px}
 .form-button{margin:0 10px}
@@ -15,6 +16,9 @@ a{color:#007bff;text-decoration:none;background-color:transparent;font-size:18px
 .text-success{color:#4bc267 !important;}
 .bg-danger{background-color:#f98792 !important;}
 .bg-success{background-color:#4bc267 !important;}
+.m-0 {margin:0px;}
+.p-0 {padding:0px;}
+.d-none {display:none !important;}
 
 
 .bg-gray {background-color:#e8e8e8 !important;}
@@ -24,3 +28,5 @@ a{color:#007bff;text-decoration:none;background-color:transparent;font-size:18px
 .request-url {display:inline-block;width:78%;}
 .request-status {display:inline-block;width:10%;text-align:right;}
 .font-custom {font-family: Verdana, 'Courier New', Courier, monospace;}
+.flex {display:flex;flex-direction:row;align-items:center;}
+.justify-content-between {justify-content:space-between;}

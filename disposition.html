@@ -9,14 +9,58 @@
 <body>
     <div class="wrapper">
 		<!-- add a back button with back angle symbol -->
-		<div class="form form-fields">
-			<a href="/">&#8249; Back</a>
+		<div class="form form-fields flex justify-content-between">
+            <span>
+			    <a href="/">&#8249; Back</a>
+            </span>
+            <span>
+                <a href="https://help.nice-incontact.com/content/acd/channels/additionalchannelfeatures/dispositions/systemdispositionvalues.htm?tocpath=ACD%7CACD%7CDispositions%7C_____2">System Dispositions</a>
+            </span>
 		</div>
+
+        <div class="form form-fields">
+            <p class="btn btn-primary toggle" data-toggle="classificationsToggle">Notes: Show/Hide</p>
+            <div id="classificationsToggle" class="d-none">
+                <h3 class="m-0 p-0">Classification IDs</h3>
+                <ul>
+                    <li>1 - Positive w/Amount</li>
+                    <li>2 - Positive no Amount</li>
+                    <li>3 - Negative — DNC — Skill</li>
+                    <li>4 - Negative — DNC — BU</li>
+                    <li>5 - Negative</li>
+                    <li>6 - Other</li>
+                    <li>7 - Retry — Rescheduled Agent Specific</li>
+                    <li>8 - Retry — Rescheduled Specified Date/Time — Any Agent</li>
+                    <li>9 - Retry — Rescheduled Later Date/Time Unspecified</li>
+                    <li>10 - Retry — Not Available</li>
+                    <li>11 - Retry — Answering Machine</li>
+                    <li>12 - Final — Answering Machine</li>
+                    <li>13 - Fax Machine</li>
+                </ul>
+
+                <h4 class="m-0 p-0">Notes</h4>
+                <p>To add classification, if there's no classification don't use colon or classification id, use following format e.g.:</p>
+                <ul>
+                    <li>Disposition_Name:Classification_ID</li>
+                    <li>Test:1</li>
+                    <li>Test Disposition</li>
+                </ul>
+            </div>
+        </div>
 
 		<div class="form form-fields">
 			<label>Dispositions (Line by Line)</label>
-			<textarea name="dispositions" id="dispositions" cols="30" rows="10"></textarea>
+			<textarea name="dispositions" id="dispositions" cols="30" rows="10">Test1
+Test2
+Test3
+Test4
+Test5
+Test6</textarea>
 		</div>
+
+        <div class="form form-fields">
+            <input type="checkbox" id="isPreviewDisposition" name="isPreviewDisposition"> Is Preview?
+        </div>
 
 		<div class="form form-button">
 			<button type="button" class="btn btn-primary" id="build" onclick="dispositionTextToJSON();">Generate JSON</button>
@@ -44,14 +88,18 @@
             var jsonData = [];
             var currentDispositions = [];
 
+            var isPreviewDisposition = document.getElementById('isPreviewDisposition').checked;
+
             for (var i = 0; i < lines.length; i++) {
                 var line = lines[i].trim();
 
+                var lineArr = line.toString().split(':');
+
                 if (line !== "") {
                     currentDispositions.push({
-                        "dispositionName": line,
-                        "isPreviewDisposition": true,
-                        "classificationId": null
+                        "dispositionName": lineArr[0],
+                        "isPreviewDisposition": isPreviewDisposition,
+                        "classificationId": isDefined(lineArr[1]) && parseInt(lineArr[1]) > 0 ? parseInt(lineArr[1]) : null
                     });
 
                     // Create a new array after every 50 objects
