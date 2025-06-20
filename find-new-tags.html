@@ -15,12 +15,31 @@
 
 		<div class="form form-fields">
 			<label>Tags To Compare</label>
-			<textarea name="tags" id="tags" cols="30" rows="10"></textarea>
+			<textarea name="tags" id="tags" cols="30" rows="10">[
+	{"tagName": "test"},
+	{"tagName": "test1"},
+	{"tagName": "test2"}
+]</textarea>
 		</div>
 
 		<div class="form form-fields">
 			<label>Tags From API</label>
-			<textarea name="apiTags" id="apiTags" cols="30" rows="10"></textarea>
+			<textarea name="apiTags" id="apiTags" cols="30" rows="10">{
+        "tags": [
+            {
+                "tagId": "1314",
+                "tagName": "Business Insurance",
+                "isActive": "True",
+                "notes": ""
+            },
+            {
+                "tagId": "1315",
+                "tagName": "Personal Insurance",
+                "isActive": "True",
+                "notes": ""
+            }
+        ]
+    }</textarea>
 		</div>
 
 		<div class="form form-button">
