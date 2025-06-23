@@ -55,18 +55,16 @@ function convertToJSON(textData) {
 			let closeTime = line.split('\t')[2];
 
 			let trimOpenTime = openTime.trim().toLowerCase();
+			trimOpenTime = trimOpenTime.replace(' ', '');
 			
 			if (openTime.toLowerCase() === "closed" || closeTime.toLowerCase() === "closed") {
 				isClosedAllDay = true;
 				openTime = "";
 				closeTime = "";
 			} else if (
-				trimOpenTime === "24 hrs" || 
 				trimOpenTime === "24hrs" || 
-				trimOpenTime === "24 hours" || 
 				trimOpenTime === "24hours" || 
-				trimOpenTime === "24h" || 
-				trimOpenTime === "24 h" || 
+				trimOpenTime === "24h" ||  
 				closeTime.toLowerCase() === "n/a"
 			) {
 				openTime = "00:00:00";
@@ -94,14 +92,30 @@ function convertToJSON(textData) {
 function convertToFormattedTime(time) {
     var [hours, minutes] = time.split(':');
 
+	hours = hours.replace('am', '');
+	if (minutes && minutes !== undefined && minutes.toLowerCase().includes('am')) {
+		minutes = minutes.replace('am', '');
+	}
+	
+	if (hours.toLowerCase().includes('pm') || (minutes && minutes !== undefined && minutes.toLowerCase().includes('pm'))) {
+		hours = hours.replace('pm', '');
+
+		if (minutes && minutes !== undefined && minutes.toLowerCase().includes('pm')) {
+			minutes = minutes.replace('pm', '');
+		}
+		
+
+		hours = parseInt(hours) + 12;
+	}
+
     // Add leading zeros if needed
-    hours = hours.padStart(2, '0');
+    hours = hours.toString().trim().padStart(2, '0');
 
     if (minutes !== null && minutes !== undefined && minutes !== "")
     {
     	minutes = minutes.padStart(2, '0');
     } else {
-	minutes = "00"
+		minutes = "00"
     }
 
     // Create the formatted time string
