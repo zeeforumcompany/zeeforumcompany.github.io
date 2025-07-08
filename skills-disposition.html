@@ -102,6 +102,12 @@
 
 						if (!isDefined(skillUpdateRequest.skill.screenPopTriggerEvent)) {
 							delete skillUpdateRequest.skill.screenPopTriggerEvent;
+						} else if (skillUpdateRequest.skill.screenPopTriggerEvent.toString().toUpperCase() == "LINKED") {
+							skillUpdateRequest.skill.screenPopTriggerEvent = 1;
+						} else if (skillUpdateRequest.skill.screenPopTriggerEvent.toString().toUpperCase() == "CONNECT") {
+							skillUpdateRequest.skill.screenPopTriggerEvent = 2;
+						} else if (skillUpdateRequest.skill.screenPopTriggerEvent.toString().toUpperCase() == "ACTIVE") {
+							skillUpdateRequest.skill.screenPopTriggerEvent = 3;
 						}
 
 						skillUpdateRequest.skill.dispositions = dispositions;
