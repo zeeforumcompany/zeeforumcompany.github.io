@@ -110,6 +110,10 @@
 							skillUpdateRequest.skill.screenPopTriggerEvent = 3;
 						}
 
+						if (skillUpdateRequest.skill.outboundTelecomRouteId === 0 || skillUpdateRequest.skill.outboundTelecomRouteId == 0) {
+							delete skillUpdateRequest.skill.outboundTelecomRouteId;
+						}
+
 						skillUpdateRequest.skill.dispositions = dispositions;
 						
 						newRequestInfo.data = skillUpdateRequest;
