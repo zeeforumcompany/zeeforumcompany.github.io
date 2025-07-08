@@ -131,6 +131,10 @@
 							skillUpdateRequest.skill.screenPopTriggerEvent = 3;
 						}
 
+						if (skillUpdateRequest.skill.outboundTelecomRouteId === 0 || skillUpdateRequest.skill.outboundTelecomRouteId == 0) {
+							delete skillUpdateRequest.skill.outboundTelecomRouteId;
+						}
+
 						if (skillUpdateRequest.skill.acwTypeId === 1) {
 							skillUpdateRequest.skill.acwTypeId = 2;
 						}
